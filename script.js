@@ -22,7 +22,7 @@ var spriteX, spriteY;
 var flipSound, matchSound, nopeSound, winSound, loseSound, bgMusic;
 
 // game variables
-var firstsprite, secondsprite;
+var firstChoice, secondChoice;
 var lives, matches;
 var spritesActive;
 
@@ -42,7 +42,7 @@ var resetButton, musicButton;
      myImage = loadImage("assets/img/image.png");
    }
  */
-function loadImages() {
+ function loadImages() {
    backImage = loadImage("assets/img/back.png");
    boltImage = loadImage("assets/img/bolt.png");
    cloudImage = loadImage("assets/img/cloud.png");
@@ -53,7 +53,8 @@ function loadImages() {
    transitionImage1 = loadImage("assets/img/transition1.png");
    transitionImage2 = loadImage("assets/img/transition2.png");
    transitionImage3 = loadImage("assets/img/transition3.png");
-}
+ }
+
 
 /*
  * function loadAnimations()
@@ -66,16 +67,14 @@ function loadImages() {
      myAnimation = loadAnimation(img1, img2, img3, img4);
    }
  */
-
- function loadAnimations(){
-   boltAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, boltImage);
-   cloudAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, cloudImage);
-   sunAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, sunImage);
-   moonAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, moonImage);
-   smileyAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, smileyImage);
-   heartAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, heartImage);
-
- }
+function loadAnimations() {
+  boltAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, boltImage);
+  cloudAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, cloudImage);
+  sunAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, sunImage);
+  moonAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, moonImage);
+  smileyAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, smileyImage);
+  heartAnimation = loadAnimation(backImage, transitionImage1, transitionImage2, transitionImage3, heartImage);
+}
 
 /*
  * function loadSounds()
@@ -87,6 +86,7 @@ function loadImages() {
      myOtherSound = loadSound("assets/sound/otherSound.mp3");
    }
  */
+
 
 /*
  * function preload()
@@ -106,35 +106,37 @@ function preload() {
  * Therefore, assets are assumed to have been loaded and ready before this
  * function is called.
  */
-function setup(){
-  gameScreen = createCanvas(790, 370);
-  gameScreen.parent("#game-screen");
-  spriteWidth = 120;
-  spriteHeight = 168;
-  spriteX = 70;
-  spriteY = 95;
-  imageArray = [ backImage, boltImage, cloudImage, sunImage, moonImage, smileyImage, heartImage,
+ function setup() {
+   gameScreen = createCanvas(790, 370);
+   gameScreen.parent("#game-screen"); // Just like maurry
+   spriteWidth = 120;
+   spriteHeight = 168;
+   spriteX = 70;
+   spriteY = 95;
+   imageArray = [backImage, boltImage, cloudImage, sunImage, moonImage, smileyImage, heartImage,
                  transitionImage1, transitionImage2, transitionImage3];
-  resizeImages();
-  createSprites();
-  spriteArray = [boltSprite1, boltSprite2, cloudSprite1, cloudSprite2,
-    sunSprite1, sunSprite2,  moonSprite1, moonSprite2, smileySprite1, smileySprite2,
-    heartSprite1, heartSprite2];
-    addAnimations();
-    shuffle(spriteArray, true);
-    placeSprites();
-    spritesActive = true;
+   resizeImages();
+   createSprites();
+   spriteArray = [boltSprite1, boltSprite2, cloudSprite1, cloudSprite2,
+     sunSprite1, sunSprite2, moonSprite1, moonSprite2, smileySprite1, smileySprite2,
+     heartSprite1, heartSprite2];
+   addAnimations();
+   shuffle(spriteArray, true);
+   placeSprites();
+   spritesActive = true;
+   matches = 0;
+   lives = 5;
+ }
 
-
-}
 
 /*
  * function draw()
  */
-function draw() {
-  background(20, 40, 60);
-  drawSprites();
-}
+ function draw() {
+   background(20, 40, 60);
+   drawSprites();
+ }
+
 /*
  * function init()
  * Initializes various elements of the game. Called in both setup() and
@@ -157,8 +159,6 @@ function draw() {
  */
 
 
-
-
 /*
  * function resizeImages()
  * Resizes all images in imageArray such that each image has a width of
@@ -167,7 +167,7 @@ function draw() {
  * Example of resizing one image:
    image.resize(40, 50);
  */
-function resizeImages(){
+function resizeImages() {
   for(var i = 0; i < imageArray.length; i++) {
     imageArray[i].resize(spriteWidth, spriteHeight);
   }
@@ -185,20 +185,21 @@ function resizeImages(){
      mySprite = createSprite(0, 0, spriteWidth, spriteHeight);
    }
  */
-function createSprites() {
-  boltSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
-  boltSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
-  cloudSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
-  cloudSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
-  sunSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
-  sunSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
-  moonSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
-  moonSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
-  smileySprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
-  smileySprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
-  heartSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
-  heartSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
-}
+ function createSprites() {
+   boltSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
+   boltSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
+   cloudSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
+   cloudSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
+   sunSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
+   sunSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
+   moonSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
+   moonSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
+   smileySprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
+   smileySprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
+   heartSprite1 = createSprite(0, 0, spriteWidth, spriteHeight);
+   heartSprite2 = createSprite(0, 0, spriteWidth, spriteHeight);
+ }
+
 
 /*
  * function addAnimations()
@@ -208,18 +209,21 @@ function createSprites() {
  * each animation's frameDelay, loop, and playing properties. Finally, this
  * function calls activateSprite(s) with each sprite as input.
  */
-function addAnimations() {
-  var animations = [boltAnimation, boltAnimation, cloudAnimation, cloudAnimation,
-                  sunAnimation, sunAnimation, moonAnimation, moonAnimation,
-                  smileyAnimation, smileyAnimation,
-                  heartAnimation, heartAnimation];
-  for(var i = 0; i < spriteArray.length; i++) {
-    spriteArray[i].addAnimation("flip", animations[i]);
-    spriteArray[i].animation.frameDelay = 10;
-    spriteArray[i].animation.looping = false;
-    spriteArray[i].animation.playing = false;
-  }
-}
+ function addAnimations() {
+   console.log("Did I even reach this part? Add animations?");
+   var animations = [boltAnimation, boltAnimation, cloudAnimation, cloudAnimation,
+                    sunAnimation, sunAnimation, moonAnimation, moonAnimation,
+                    smileyAnimation, smileyAnimation,
+                    heartAnimation, heartAnimation];
+   for(var i = 0; i < spriteArray.length; i++) {
+     spriteArray[i].addAnimation("flip", animations[i]);
+     spriteArray[i].animation.frameDelay = 10;
+     spriteArray[i].animation.looping = false;
+     spriteArray[i].animation.playing = false;
+     activateSprite(spriteArray[i]);
+   }
+ }
+
 
 /*
  * function placeSprites()
@@ -227,19 +231,21 @@ function addAnimations() {
  * pattern you like. For starters, try arranging the sprites in a simple
  * grid-like pattern (e.g., 2x2 if you only have four sprites).
  */
-function placeSprites(){
-  for(var i = 0; i < spriteArray.length; i++){
-    spriteArray[i].position.x = spriteX;
-    spriteArray[i].position.y = spriteY;
-    if((i + 1) % 6==0 ) {// if the number of sprites is divisble by 6
-      spriteX = 70;
-      spriteY += spriteHeight + 10;
-    }
-    else {
-      spriteX += spriteWidth + 10;
-    }
-  }
-}
+ function placeSprites() {
+   for(var i = 0; i < spriteArray.length; i++) {
+     spriteArray[i].position.x = spriteX;
+     spriteArray[i].position.y = spriteY;
+     if((i + 1) % 6 === 0) { // if the number of sprites is divisible by 6
+       spriteX = 70;
+       spriteY += spriteHeight + 10;
+     }
+     else {
+       spriteX += spriteWidth + 10;
+     }
+   }
+ }
+
+
 
 /*
  * function activateSprite(s)
@@ -252,6 +258,27 @@ function placeSprites(){
  * spriteOne and spriteTwo to sprites in the order tht they are clicked. When
  * two sprites have been clicked, the function calls checkMatch().
  */
+
+ // functions are hoisted to the top of the script. variables are not hoisted.
+
+ function activateSprite(s) {
+   s.onMousePressed = function() {
+     console.log("Hello!");
+     if(spritesActive && s.animation.getFrame() !== s.animation.getLastFrame()) {
+       if(firstChoice === undefined) {
+         firstChoice = s;
+         // flipSound.play();
+         s.animation.goToFrame(s.animation.getLastFrame());
+       }
+       else if(s !== firstChoice) {
+         secondChoice = s;
+         //flipSound.play();
+         s.animation.goToFrame(s.animation.getLastFrame());
+         checkMatch();
+       }
+     }
+   }
+ }
 
 
 
@@ -267,13 +294,65 @@ function placeSprites(){
  * locations to the player. Win or lose, the player is given the option to
  * reset and try again with a fresh shuffle.
  */
-
+function checkMatch() {
+  var boltMatch = (firstChoice === boltSprite1 && secondChoice === boltSprite2) ||
+                  (firstChoice === boltSprite2 && secondChoice === boltSprite1);
+  var cloudMatch = (firstChoice === cloudSprite1 && secondChoice === cloudSprite2) ||
+                  (firstChoice === cloudSprite2 && secondChoice === cloudSprite1);
+  var sunMatch = (firstChoice === sunSprite1 && secondChoice === sunSprite2) ||
+                  (firstChoice === sunSprite2 && secondChoice === sunSprite1);
+  var moonMatch = (firstChoice === moonSprite1 && secondChoice === moonSprite2) ||
+                  (firstChoice === moonSprite2 && secondChoice === moonSprite1);
+  var smileyMatch = (firstChoice === smileySprite1 && secondChoice === smileySprite2) ||
+                  (firstChoice === smileySprite2 && secondChoice === smileySprite1);
+  var heartMatch = (firstChoice === heartSprite1 && secondChoice === heartSprite2) ||
+                  (firstChoice === heartSprite2 && secondChoice === heartSprite1);
+    //if they got a macth
+  if(boltMatch || cloudMatch || sunMatch || moonMatch || smileyMatch || heartMatch){
+    matches++;
+    // if they didn't match
+  if(matches === spriteArray.length / 2) {
+      alert("YOU WIN! YOU ARE A BEAST.");
+      spritesActive = false;
+    }
+    else {
+      alert("Match!");
+      firstChoice = undefined;
+      secondChoice = undefined;
+      }
+    }
+    else {
+      lives --;
+      spritesActive = false;
+      if(lives === 0) {
+        setTimeout(function() {
+        alert("Game Over!");
+        //flipAllSprites();
+      }, 2000);
+      }
+      else {
+        setTimeout(function() {
+          alert("No match! Lives Left:" + lives m9);
+          firstChoice.animation.goToFrame(0);
+          secondChoice.animation.goToFrame(0);
+          firstChoice = undefined;
+          secondChoice = undefined;
+          spritesActive = true;
+        }, 2000);
+      }
+    }
+  }
 /*
  * function flipAllSprites()
  * Flips all sprites in spriteArray to their last animation frame (i.e.,
  * "face-up").
  */
-
+function flipAllSprites() {
+    for(var i = 0; i < spriteArray.length; i++) {
+      var lastFrame = spriteArray[i].length.getLastFrame();
+      spriteArray[i].animations.goToFrame(lastFrame);
+    }
+  }
  /*
   * function resetAllSprites()
   * Does exactly the opposite of the above function!
